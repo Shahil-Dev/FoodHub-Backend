@@ -45,6 +45,8 @@
   "exclude": [
     "node_modules",
     "dist",
-    "generated"
+    "generated/prisma"
   ]
 }
+
+//lib/prisma.ts
