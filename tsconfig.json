@@ -50,3 +50,7 @@
 }
 
 //lib/prisma.ts
+
+
+
+//npx tsx src/Server.ts
