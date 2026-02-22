@@ -19,7 +19,7 @@ const createUser = async (payload: any) => {
     const token = jwt.sign(
         userData,
         process.env.JWT_SECRET_KEY as string,
-        { expiresIn: "1h" }
+        { expiresIn: "7d" }
     );
 
     const { password, ...userWithoutPassword } = result;
@@ -60,7 +60,7 @@ const loginUser = async (payload: any) => {
     const token = jwt.sign(
         userData,
         process.env.JWT_SECRET_KEY as string,
-        { expiresIn: "1h" }
+        { expiresIn: "7d" }
     );
 
     const { password, ...userWithoutPassword } = user;
