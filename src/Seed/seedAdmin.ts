@@ -18,7 +18,7 @@ const seedAdmin = async () => {
     const hashPassword = await bcrypt.hashSync(adminPassword, 10);
 
     const adminData = {
-        name: adminName ,
+        name: adminName || "Admin",
         email: adminEmail,
         password: hashPassword,
         role: UserRole.ADMIN

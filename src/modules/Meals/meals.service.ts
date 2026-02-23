@@ -14,7 +14,7 @@ const createMeal = async (payload: any, userID: string) => {
     }
 
     const result = await prisma.meal.create({
-        data: { 
+        data: {
             ...rest,
             providerId: userID,
             categoryId: categoryId || null
@@ -23,7 +23,29 @@ const createMeal = async (payload: any, userID: string) => {
 
     return result;
 };
+const getAllMeals = async (userID: string) => {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: userID
+        }
+    });
+
+    if (!user) {
+        throw new Error("User not found!!");
+    }
+
+    const result = await prisma.meal.findMany({
+        where: {
+            providerId: userID
+        }
+    });
+
+
+    return result;
+};
+
 
 export const MealsService = {
-    createMeal
+    createMeal,
+    getAllMeals
 };
