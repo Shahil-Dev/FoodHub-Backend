@@ -6,86 +6,10 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id              String           @id @default(uuid())
-  email           String           @unique
-  password        String
-  name            String?
-  role            Role             @default(CUSTOMER)
-  phone           String?
-  address         String?
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-
-  meals           Meal[]           
-  orders          Order[]
-  reviews         Review[]
-
-  @@map("users")
-}
-
 enum Role {
   CUSTOMER
   PROVIDER
   ADMIN
-}
-
-model Category {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  description String?
-  meals       Meal[]
-
-  @@map("categories")
-}
-
-model Meal {
-  id                  String              @id @default(uuid())
-  name                String
-  description         String?
-  price               Float
-  imageUrl            String?
-  isAvailable         Boolean             @default(true)
-  categoryId          String?
-  providerId          String?
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt
-
-  category            Category?           @relation(fields: [categoryId], references: [id])
-  provider            User?               @relation(fields: [providerId], references: [id], onDelete: Cascade)
-  orderItems          OrderItem[]
-  reviews             Review[]
-
-  @@map("meals")
-}
-
-model Order {
-  id              String      @id @default(uuid())
-  userId          String
-  providerId      String
-  totalAmount     Float
-  status          OrderStatus @default(PLACED)
-  deliveryAddress String
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-
-  user            User        @relation(fields: [userId], references: [id])
-  items           OrderItem[]
-  
-  @@map("orders")
-}
-
-model OrderItem {
-  id           String @id @default(uuid())
-  orderId      String
-  mealId       String
-  quantity     Int
-  priceAtOrder Float
-
-  order        Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  meal         Meal   @relation(fields: [mealId], references: [id])
-
-  @@map("order_items")
 }
 
 enum OrderStatus {
@@ -96,25 +20,111 @@ enum OrderStatus {
   CANCELLED
 }
 
-model Review {
-  id        String   @id @default(uuid())
-  userId    String
-  mealId    String
-  rating    Int
-  comment   String?
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(CUSTOMER)
+  status    String   @default("active")
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  user      User     @relation(fields: [userId], references: [id])
-  meal      Meal     @relation(fields: [mealId], references: [id])
+  providerProfile ProviderProfile?
+  orders          Order[]
+  reviews         Review[]
 
-  @@map("reviews")
+  @@map("users")
 }
 
-enum DietaryPreference {
-  VEGETARIAN
-  VEGAN
-  GLUTEN_FREE
-  DAIRY_FREE
-  HALAL
-  KOSHER
+model ProviderProfile {
+  id           String  @id @default(cuid())
+  userId       String  @unique
+  businessName String
+  description  String?
+  address      String
+  logoUrl      String?
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  meals  Meal[]
+  orders Order[]
+
+  @@map("provider_profiles")
+}
+
+model Category {
+  id    String @id @default(cuid())
+  name  String @unique
+  meals Meal[]
+
+  @@map("categories")
+}
+
+model Meal {
+  id          String  @id @default(cuid())
+  name        String
+  description String
+  price       Float
+  imageUrl    String?
+  isAvailable Boolean @default(true)
+
+  categoryId String
+  category   Category        @relation(fields: [categoryId], references: [id])
+  providerId String
+  provider   ProviderProfile @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  orderItems OrderItem[]
+  reviews    Review[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("meals")
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  status          OrderStatus @default(PLACED)
+  totalAmount     Float
+  deliveryAddress String
+
+  customerId String
+  customer   User            @relation(fields: [customerId], references: [id])
+  providerId String
+  provider   ProviderProfile @relation(fields: [providerId], references: [id])
+
+  items OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id       String @id @default(cuid())
+  quantity Int
+  price    Float
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  mealId  String
+  meal    Meal   @relation(fields: [mealId], references: [id])
+
+  @@map("order_items")
+}
+
+model Review {
+  id      String  @id @default(cuid())
+  rating  Int
+  comment String?
+
+  customerId String
+  customer   User   @relation(fields: [customerId], references: [id])
+  mealId     String
+  meal       Meal   @relation(fields: [mealId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@map("reviews")
 }
