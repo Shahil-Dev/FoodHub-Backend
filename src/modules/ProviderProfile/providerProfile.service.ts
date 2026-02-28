@@ -22,6 +22,62 @@ const createProviderProfile = async (userId: string, payload: any) => {
     return result;
 };
 
+
+
+const getAllProviderMeals = async (userId: string) => {
+    const providerProfile = await prisma.providerProfile.findUnique({
+        where: { userId }
+    });
+
+    if (!providerProfile) {
+        throw new Error("Provider profile not found!!");
+    }
+
+    const result = await prisma.meal.findMany({
+        where: {
+            providerId: providerProfile.id
+        },
+        include: {
+            category: true 
+        },
+        orderBy: {
+            createdAt: 'desc' 
+        }
+    });
+
+    return result;
+};
+
+const getSingleProviderMeal = async (userId: string, mealId: string) => {
+    const providerProfile = await prisma.providerProfile.findUnique({
+        where: { userId }
+    });
+
+    if (!providerProfile) {
+        throw new Error("Provider profile not found!!");
+    }
+
+    const result = await prisma.meal.findFirst({
+        where: {
+            id: mealId,
+            providerId: providerProfile.id
+        },
+        include: {
+            category: true
+        }
+    });
+
+    if (!result) {
+        throw new Error("Meal not found or you don't have permission to view this!");
+    }
+
+    return result;
+};
+
+
+
 export const ProviderProfileService = {
-    createProviderProfile
+    createProviderProfile,
+    getAllProviderMeals,
+    getSingleProviderMeal
 };

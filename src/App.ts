@@ -1,7 +1,5 @@
 import express from "express";
 import { postRouter } from "./modules/post.router";
-import { AuthRoutes } from "./modules/Auth/auth.route";
-import { MealsRoutes } from "./modules/Meals/meals.route";
 import router from "./routes";
 
 const app = express();

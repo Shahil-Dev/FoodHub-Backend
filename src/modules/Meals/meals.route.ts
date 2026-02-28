@@ -4,21 +4,32 @@ import { MealsController } from './meals.controller';
 
 const router = express.Router();
 
-router.post(
+router.get(
     "/",
+    MealsController.getAllMeals
+);
+
+router.get(
+    "/:id",
+    MealsController.getSingleMeal
+);
+
+router.post(
+    "/create-meal",
     auth(UserRole.PROVIDER),
     MealsController.createMeals
 );
 
-router.get(
-    "/",
-    auth(UserRole.PROVIDER),
-    MealsController.getAllMeals
-);
-router.get(
+router.patch(
     "/:id",
     auth(UserRole.PROVIDER),
-    MealsController.getSingleMeal
+    MealsController.updateMeal
+);
+
+router.delete(
+    "/:id",
+    auth(UserRole.PROVIDER),
+    MealsController.deleteMeal
 );
 
 export const MealsRoutes = router;

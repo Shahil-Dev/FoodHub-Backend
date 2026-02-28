@@ -1,85 +1,3 @@
-// import { prisma } from "../../lib/prisma";
-
-// const createMeal = async (payload: any, userID: string) => {
-//     const { categoryName, ...rest } = payload;
-
-//     const providerProfile = await prisma.providerProfile.findUnique({
-//         where: { userId: userID }
-//     });
-
-//     if (!providerProfile) {
-//         throw new Error("Provider profile not found! Please create a profile first.");
-//     }
-
-//     const result = await prisma.meal.create({
-//         data: {
-//             name: rest.name,
-//             description: rest.description,
-//             price: Number(rest.price),
-//             imageUrl: rest.imageUrl,
-//             provider: {
-//                 connect: { id: providerProfile.id }
-//             },
-//             category: {
-//                 connectOrCreate: {
-//                     where: { name: categoryName },
-//                     create: { name: categoryName }
-//                 }
-//             }
-//         },
-//         include: {
-//             category: true
-//         }
-//     });
-
-//     return result;
-// };
-
-// const getAllMeals = async (userID: string) => {
-//     const providerProfile = await prisma.providerProfile.findUnique({
-//         where: { userId: userID }
-//     });
-
-//     if (!providerProfile) {
-//         throw new Error("Provider profile not found!!");
-//     }
-
-//     const result = await prisma.meal.findMany({
-//         where: {
-//             providerId: providerProfile.id
-//         },
-//         include: {
-//             category: true
-//         }
-//     });
-
-//     return result;
-// };
-
-// const getSingleMeal = async (mealID: string) => {
-//     const result = await prisma.meal.findUnique({
-//         where: { id: mealID },
-//         include: {
-//             provider: true,
-//             category: true
-//         }
-//     });
-
-//     if (!result) {
-//         throw new Error("Meal not found!!");
-//     }
-
-//     return result;
-// };
-
-// export const MealsService = {
-//     createMeal,
-//     getAllMeals,
-//     getSingleMeal
-// };
-
-
-
 import { prisma } from "../../lib/prisma";
 
 const createMeal = async (payload: any, userId: string) => {
@@ -89,11 +7,9 @@ const createMeal = async (payload: any, userId: string) => {
         where: { userId }
     });
 
-    if (!providerProfile) {
-        throw new Error("Provider profile not found! Please create a profile first.");
-    }
+    if (!providerProfile) throw new Error("Provider profile not found!");
 
-    const result = await prisma.meal.create({
+    return await prisma.meal.create({
         data: {
             name: rest.name,
             description: rest.description,
@@ -103,30 +19,43 @@ const createMeal = async (payload: any, userId: string) => {
                 connect: { id: providerProfile.id }
             },
             category: {
-                connectOrCreate: {
-                    where: { name: categoryName },
-                    create: { name: categoryName }
-                }
+                connect: { name: categoryName }
             }
         },
         include: {
-            category: true
+            category: true,
+            provider: true
         }
     });
-
-    return result;
 };
 
-const getAllMeals = async (userId: string) => {
-    const providerProfile = await prisma.providerProfile.findUnique({
-        where: { userId }
-    });
+const getAllMeals = async (filters: any) => {
+    const { searchTerm, category, minPrice, maxPrice } = filters;
+    const where: any = { isAvailable: true }; // শুধু যেসব খাবার স্টকে আছে
 
-    if (!providerProfile) throw new Error("Provider profile not found!!");
+    // ১. সার্চ টার্ম (নাম বা ডেসক্রিপশনে খুঁজবে)
+    if (searchTerm) {
+        where.OR = [
+            { name: { contains: searchTerm, mode: 'insensitive' } },
+            { description: { contains: searchTerm, mode: 'insensitive' } },
+        ];
+    }
+
+    if (category) {
+        where.category = { name: category.toUpperCase() };
+    }
+
+  
+    if (minPrice || maxPrice) {
+        where.price = {};
+        if (minPrice) where.price.gte = Number(minPrice);
+        if (maxPrice) where.price.lte = Number(maxPrice);
+    }
 
     return await prisma.meal.findMany({
-        where: { providerId: providerProfile.id },
-        include: { category: true }
+        where,
+        include: { category: true, provider: true },
+        orderBy: { createdAt: 'desc' }
     });
 };
 
@@ -140,8 +69,43 @@ const getSingleMeal = async (mealId: string) => {
     return result;
 };
 
+
+
+const updateMeal = async (mealId: string, userId: string, payload: any) => {
+    const meal = await prisma.meal.findUnique({
+        where: { id: mealId },
+        include: { provider: true }
+    });
+
+    if (!meal || meal.provider.userId !== userId) {
+        throw new Error("You are not authorized to update this meal!");
+    }
+
+    return await prisma.meal.update({
+        where: { id: mealId },
+        data: payload
+    });
+};
+
+const deleteMeal = async (mealId: string, userId: string) => {
+    const meal = await prisma.meal.findUnique({
+        where: { id: mealId },
+        include: { provider: true }
+    });
+
+    if (!meal || meal.provider.userId !== userId) {
+        throw new Error("You are not authorized to delete this meal!");
+    }
+
+    return await prisma.meal.delete({ where: { id: mealId } });
+};
+
+
+
 export const MealsService = {
     createMeal,
     getAllMeals,
-    getSingleMeal
+    getSingleMeal,
+    updateMeal,
+    deleteMeal
 };

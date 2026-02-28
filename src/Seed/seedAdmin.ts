@@ -24,27 +24,23 @@ const seedAdmin = async () => {
         role: UserRole.ADMIN
     }
 
+
     try {
         const isExist = await prisma.user.findUnique({
             where: { email: adminData.email }
         });
-
         if (isExist) {
             console.log("Admin already exist!!!")
             return;
         }
-
         await prisma.user.create({
             data: adminData
         })
-
         console.log("Admin created successfully!!!!")
-
     } catch (error) {
         console.error("Error seeding admin:", error);
     } finally {
         await prisma.$disconnect();
     }
 }
-
 seedAdmin();
