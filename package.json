@@ -4,14 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": " tsx watch src/Server.ts",
+    "dev": "tsx watch src/Server.ts",
+    "build": "prisma generate && tsc",
+    "start": "node dist/Server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seed:Admin": "tsx src/Seed/seedAdmin.ts"
+    "seed:Admin": "tsx src/Seed/seedAdmin.ts",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
