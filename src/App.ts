@@ -7,11 +7,15 @@ const app: Application = express();
 
 app.use(express.json());
 
+import cors from "cors";
+
 app.use(cors({
-    origin: true,
+    origin: [
+      "http://localhost:3000", 
+      "https://assignment-4-backend-hvp6vrkn2-shahil777s-projects.vercel.app" 
+    ],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], 
-    allowedHeaders: ["Content-Type", "Authorization"]
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
 }));
 
 app.use("/api/v1", router);
