@@ -1,12 +1,15 @@
-import { prisma } from "../../lib/prisma";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProviderProfileService = void 0;
+const prisma_1 = require("../../lib/prisma");
 const createProviderProfile = async (userId, payload) => {
-    const isExist = await prisma.providerProfile.findUnique({
+    const isExist = await prisma_1.prisma.providerProfile.findUnique({
         where: { userId }
     });
     if (isExist) {
         throw new Error("Provider profile already exists for this user!");
     }
-    const result = await prisma.providerProfile.create({
+    const result = await prisma_1.prisma.providerProfile.create({
         data: {
             businessName: payload.businessName,
             address: payload.address,
@@ -18,13 +21,13 @@ const createProviderProfile = async (userId, payload) => {
     return result;
 };
 const getAllProviderMeals = async (userId) => {
-    const providerProfile = await prisma.providerProfile.findUnique({
+    const providerProfile = await prisma_1.prisma.providerProfile.findUnique({
         where: { userId }
     });
     if (!providerProfile) {
         throw new Error("Provider profile not found!!");
     }
-    const result = await prisma.meal.findMany({
+    const result = await prisma_1.prisma.meal.findMany({
         where: {
             providerId: providerProfile.id
         },
@@ -38,13 +41,13 @@ const getAllProviderMeals = async (userId) => {
     return result;
 };
 const getSingleProviderMeal = async (userId, mealId) => {
-    const providerProfile = await prisma.providerProfile.findUnique({
+    const providerProfile = await prisma_1.prisma.providerProfile.findUnique({
         where: { userId }
     });
     if (!providerProfile) {
         throw new Error("Provider profile not found!!");
     }
-    const result = await prisma.meal.findFirst({
+    const result = await prisma_1.prisma.meal.findFirst({
         where: {
             id: mealId,
             providerId: providerProfile.id
@@ -58,7 +61,7 @@ const getSingleProviderMeal = async (userId, mealId) => {
     }
     return result;
 };
-export const ProviderProfileService = {
+exports.ProviderProfileService = {
     createProviderProfile,
     getAllProviderMeals,
     getSingleProviderMeal

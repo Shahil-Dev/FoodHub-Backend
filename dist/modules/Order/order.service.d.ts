@@ -9,7 +9,7 @@ export declare const OrderService: {
         }[];
     } & {
         id: string;
-        status: import("@prisma/client").$Enums.OrderStatus;
+        status: import(".prisma/client").$Enums.OrderStatus;
         createdAt: Date;
         updatedAt: Date;
         providerId: string;
@@ -40,7 +40,7 @@ export declare const OrderService: {
         })[];
     } & {
         id: string;
-        status: import("@prisma/client").$Enums.OrderStatus;
+        status: import(".prisma/client").$Enums.OrderStatus;
         createdAt: Date;
         updatedAt: Date;
         providerId: string;
@@ -75,7 +75,7 @@ export declare const OrderService: {
         })[];
     } & {
         id: string;
-        status: import("@prisma/client").$Enums.OrderStatus;
+        status: import(".prisma/client").$Enums.OrderStatus;
         createdAt: Date;
         updatedAt: Date;
         providerId: string;
@@ -85,7 +85,7 @@ export declare const OrderService: {
     })[]>;
     updateOrderStatus: (orderId: string, status: string) => Promise<{
         id: string;
-        status: import("@prisma/client").$Enums.OrderStatus;
+        status: import(".prisma/client").$Enums.OrderStatus;
         createdAt: Date;
         updatedAt: Date;
         providerId: string;

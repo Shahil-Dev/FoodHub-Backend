@@ -1,7 +1,10 @@
-import { CategoryService } from "./category.service";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CategoryController = void 0;
+const category_service_1 = require("./category.service");
 const seedCategories = async (req, res) => {
     try {
-        const result = await CategoryService.seedCategories();
+        const result = await category_service_1.CategoryService.seedCategories();
         res.status(200).json({
             success: true,
             message: "Categories seeded successfully!",
@@ -17,7 +20,7 @@ const seedCategories = async (req, res) => {
 };
 const getAllCategories = async (req, res) => {
     try {
-        const result = await CategoryService.getAllCategories();
+        const result = await category_service_1.CategoryService.getAllCategories();
         res.status(200).json({
             success: true,
             message: "Categories fetched successfully",
@@ -31,7 +34,7 @@ const getAllCategories = async (req, res) => {
         });
     }
 };
-export const CategoryController = {
+exports.CategoryController = {
     seedCategories,
     getAllCategories
 };

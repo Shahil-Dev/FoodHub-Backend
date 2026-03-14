@@ -1,8 +1,14 @@
-import express from 'express';
-import { postController } from './post.controller';
-const router = express.Router();
-router.post("/", postController.createPost);
-export const postRouter = {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.postRouter = void 0;
+const express_1 = __importDefault(require("express"));
+const post_controller_1 = require("./post.controller");
+const router = express_1.default.Router();
+router.post("/", post_controller_1.postController.createPost);
+exports.postRouter = {
     router
 };
 //# sourceMappingURL=post.router.js.map

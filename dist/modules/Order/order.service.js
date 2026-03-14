@@ -1,7 +1,10 @@
-import { prisma } from "../../lib/prisma";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OrderService = void 0;
+const prisma_1 = require("../../lib/prisma");
 const createOrder = async (userId, payload) => {
     const { items, deliveryAddress } = payload;
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma_1.prisma.$transaction(async (tx) => {
         let totalAmount = 0;
         const orderItemsData = [];
         for (const item of items) {
@@ -37,7 +40,7 @@ const createOrder = async (userId, payload) => {
     return result;
 };
 const getMyOrders = async (userId) => {
-    return await prisma.order.findMany({
+    return await prisma_1.prisma.order.findMany({
         where: { customerId: userId },
         include: {
             items: { include: { meal: true } }
@@ -46,12 +49,12 @@ const getMyOrders = async (userId) => {
     });
 };
 const getProviderOrders = async (userId) => {
-    const providerProfile = await prisma.providerProfile.findUnique({
+    const providerProfile = await prisma_1.prisma.providerProfile.findUnique({
         where: { userId }
     });
     if (!providerProfile)
         throw new Error("Provider profile not found!");
-    return await prisma.order.findMany({
+    return await prisma_1.prisma.order.findMany({
         where: { providerId: providerProfile.id },
         include: {
             items: { include: { meal: true } },
@@ -61,12 +64,12 @@ const getProviderOrders = async (userId) => {
     });
 };
 const updateOrderStatus = async (orderId, status) => {
-    return await prisma.order.update({
+    return await prisma_1.prisma.order.update({
         where: { id: orderId },
         data: { status: status }
     });
 };
-export const OrderService = {
+exports.OrderService = {
     createOrder,
     getMyOrders,
     getProviderOrders,

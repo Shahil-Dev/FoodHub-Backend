@@ -1,14 +1,16 @@
-import { prisma } from "../../lib/prisma";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ReviewService = void 0;
+const prisma_1 = require("../../lib/prisma");
 const createReview = async (userId, payload) => {
     const { mealId, orderId, rating, comment } = payload;
-    // চেক করা যে ইউজার আসলেই এই অর্ডারটি করেছে কি না এবং অর্ডারটি ডেলিভার হয়েছে কি না
-    const order = await prisma.order.findUnique({
+    const order = await prisma_1.prisma.order.findUnique({
         where: { id: orderId }
     });
     if (!order || order.customerId !== userId) {
         throw new Error("You cannot review an order that isn't yours!");
     }
-    return await prisma.review.create({
+    return await prisma_1.prisma.review.create({
         data: {
             rating: Number(rating),
             comment,
@@ -19,7 +21,7 @@ const createReview = async (userId, payload) => {
     });
 };
 const getMealReviews = async (mealId) => {
-    return await prisma.review.findMany({
+    return await prisma_1.prisma.review.findMany({
         where: { mealId },
         include: {
             customer: { select: { name: true } }
@@ -27,7 +29,7 @@ const getMealReviews = async (mealId) => {
         orderBy: { createdAt: 'desc' }
     });
 };
-export const ReviewService = {
+exports.ReviewService = {
     createReview,
     getMealReviews
 };

@@ -1,7 +1,10 @@
-import { AuthService } from "./auth.service";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AuthController = void 0;
+const auth_service_1 = require("./auth.service");
 const createUser = async (req, res) => {
     try {
-        const result = await AuthService.createUser(req.body);
+        const result = await auth_service_1.AuthService.createUser(req.body);
         res.cookie("token", result.token, {
             httpOnly: true,
             secure: false,
@@ -22,7 +25,7 @@ const createUser = async (req, res) => {
 };
 const loginUser = async (req, res) => {
     try {
-        const result = await AuthService.loginUser(req.body);
+        const result = await auth_service_1.AuthService.loginUser(req.body);
         res.cookie("token", result.token, {
             httpOnly: true,
             secure: false,
@@ -41,7 +44,7 @@ const loginUser = async (req, res) => {
         });
     }
 };
-export const AuthController = {
+exports.AuthController = {
     createUser,
     loginUser
 };

@@ -1,8 +1,13 @@
-import bcrypt from "bcryptjs";
-import { UserRole } from "../middleware/auth";
-import { prisma } from "../lib/prisma";
-import dotenv from "dotenv";
-dotenv.config();
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const auth_1 = require("../middleware/auth");
+const prisma_1 = require("../lib/prisma");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const seedAdmin = async () => {
     const adminName = process.env.SUPER_ADMIN_NAME;
     const adminEmail = process.env.SUPER_ADMIN_EMAIL;
@@ -11,22 +16,22 @@ const seedAdmin = async () => {
         console.error("Admin credentials are missing in .env file!");
         return;
     }
-    const hashPassword = await bcrypt.hashSync(adminPassword, 10);
+    const hashPassword = await bcryptjs_1.default.hashSync(adminPassword, 10);
     const adminData = {
         name: adminName || "Admin",
         email: adminEmail,
         password: hashPassword,
-        role: UserRole.ADMIN
+        role: auth_1.UserRole.ADMIN
     };
     try {
-        const isExist = await prisma.user.findUnique({
+        const isExist = await prisma_1.prisma.user.findUnique({
             where: { email: adminData.email }
         });
         if (isExist) {
             console.log("Admin already exist!!!");
             return;
         }
-        await prisma.user.create({
+        await prisma_1.prisma.user.create({
             data: adminData
         });
         console.log("Admin created successfully!!!!");
@@ -35,7 +40,7 @@ const seedAdmin = async () => {
         console.error("Error seeding admin:", error);
     }
     finally {
-        await prisma.$disconnect();
+        await prisma_1.prisma.$disconnect();
     }
 };
 seedAdmin();

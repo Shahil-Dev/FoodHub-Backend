@@ -2,7 +2,7 @@ export declare const MealsService: {
     createMeal: (payload: any, userId: string) => Promise<{
         category: {
             id: string;
-            name: import("@prisma/client").$Enums.CategoryName;
+            name: import(".prisma/client").$Enums.CategoryName;
         };
         provider: {
             id: string;
@@ -27,7 +27,7 @@ export declare const MealsService: {
     getAllMeals: (filters: any) => Promise<({
         category: {
             id: string;
-            name: import("@prisma/client").$Enums.CategoryName;
+            name: import(".prisma/client").$Enums.CategoryName;
         };
         provider: {
             id: string;
@@ -52,7 +52,7 @@ export declare const MealsService: {
     getSingleMeal: (mealId: string) => Promise<{
         category: {
             id: string;
-            name: import("@prisma/client").$Enums.CategoryName;
+            name: import(".prisma/client").$Enums.CategoryName;
         };
         provider: {
             id: string;

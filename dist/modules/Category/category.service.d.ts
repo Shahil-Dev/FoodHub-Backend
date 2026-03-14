@@ -4,7 +4,7 @@ export declare const CategoryService: {
     }>;
     getAllCategories: () => Promise<{
         id: string;
-        name: import("@prisma/client").$Enums.CategoryName;
+        name: import(".prisma/client").$Enums.CategoryName;
     }[]>;
 };
 //# sourceMappingURL=category.service.d.ts.map

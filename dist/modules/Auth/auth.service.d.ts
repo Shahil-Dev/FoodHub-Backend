@@ -4,7 +4,7 @@ export declare const AuthService: {
         user: {
             id: string;
             email: string;
-            role: import("@prisma/client").$Enums.Role;
+            role: import(".prisma/client").$Enums.Role;
             name: string;
             status: string;
             createdAt: Date;
@@ -16,7 +16,7 @@ export declare const AuthService: {
         user: {
             id: string;
             email: string;
-            role: import("@prisma/client").$Enums.Role;
+            role: import(".prisma/client").$Enums.Role;
             name: string;
             status: string;
             createdAt: Date;

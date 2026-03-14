@@ -1,6 +1,9 @@
-import { prisma } from "../../lib/prisma";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AdminService = void 0;
+const prisma_1 = require("../../lib/prisma");
 const getAllUsers = async () => {
-    return await prisma.user.findMany({
+    return await prisma_1.prisma.user.findMany({
         select: {
             id: true,
             name: true,
@@ -12,15 +15,15 @@ const getAllUsers = async () => {
     });
 };
 const updateUserStatus = async (userId, status) => {
-    return await prisma.user.update({
+    return await prisma_1.prisma.user.update({
         where: { id: userId },
         data: { status: status }
     });
 };
 const getAdminStats = async () => {
-    const totalUsers = await prisma.user.count();
-    const totalOrders = await prisma.order.count();
-    const totalRevenue = await prisma.order.aggregate({
+    const totalUsers = await prisma_1.prisma.user.count();
+    const totalOrders = await prisma_1.prisma.order.count();
+    const totalRevenue = await prisma_1.prisma.order.aggregate({
         _sum: { totalAmount: true },
         where: { status: 'DELIVERED' }
     });
@@ -30,7 +33,7 @@ const getAdminStats = async () => {
         totalRevenue: totalRevenue._sum.totalAmount || 0
     };
 };
-export const AdminService = {
+exports.AdminService = {
     getAllUsers,
     updateUserStatus,
     getAdminStats

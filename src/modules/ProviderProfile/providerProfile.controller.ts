@@ -1,39 +1,49 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { ProviderProfileService } from "./providerProfile.service";
+
+const sendResponse = (res: Response, data: { statusCode: number; success: boolean; message: string; data?: any }) => {
+    res.status(data.statusCode).json({
+        success: data.success,
+        message: data.message,
+        data: data.data,
+    });
+};
 
 const createProviderProfile = async (req: Request, res: Response) => {
     try {
         const user = (req as any).user; 
         const result = await ProviderProfileService.createProviderProfile(user.id, req.body);
         
-        res.status(201).json({
+        sendResponse(res, {
+            statusCode: 201,
             success: true,
             message: "Provider Profile created successfully",
             data: result
         });
     } catch (error: any) {
-        res.status(400).json({
+        sendResponse(res, {
+            statusCode: 400,
             success: false,
-            message: error.message || "Something went wrong"
+            message: error.message || "Failed to create profile"
         });
     }
 };
 
-
-const getAllProviderMeals = async (req: Request, res: Response) => {
+const getAllProviders = async (req: Request, res: Response) => {
     try {
-        const userId = (req as any).user.id; 
-        const result = await ProviderProfileService.getAllProviderMeals(userId);
-
-        res.status(200).json({
+        const result = await ProviderProfileService.getAllProviders();
+        
+        sendResponse(res, {
+            statusCode: 200,
             success: true,
-            message: "Provider meals fetched successfully",
+            message: "All providers fetched successfully",
             data: result
         });
     } catch (error: any) {
-        res.status(400).json({
+        sendResponse(res, {
+            statusCode: 400,
             success: false,
-            message: error.message || "Something went wrong"
+            message: error.message || "Failed to fetch providers"
         });
     }
 };
@@ -44,21 +54,23 @@ const getSingleProviderMeal = async (req: Request, res: Response) => {
         const mealId = req.params.id;
         const result = await ProviderProfileService.getSingleProviderMeal(userId, mealId as string);
 
-        res.status(200).json({
+        sendResponse(res, {
+            statusCode: 200,
             success: true,
             message: "Meal fetched successfully",
             data: result
         });
     } catch (error: any) {
-        res.status(400).json({
+        sendResponse(res, {
+            statusCode: 404, 
             success: false,
-            message: error.message || "Something went wrong"
+            message: error.message || "Meal not found"
         });
     }
 };
 
 export const ProviderProfileController = {
     createProviderProfile,
-    getAllProviderMeals,
+    getAllProviders,
     getSingleProviderMeal
 };

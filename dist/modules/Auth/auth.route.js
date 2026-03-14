@@ -1,7 +1,13 @@
-import express from 'express';
-import { AuthController } from './auth.controller';
-const router = express.Router();
-router.post("/register", AuthController.createUser);
-router.post("/login", AuthController.loginUser);
-export const AuthRoutes = router;
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AuthRoutes = void 0;
+const express_1 = __importDefault(require("express"));
+const auth_controller_1 = require("./auth.controller");
+const router = express_1.default.Router();
+router.post("/register", auth_controller_1.AuthController.createUser);
+router.post("/login", auth_controller_1.AuthController.loginUser);
+exports.AuthRoutes = router;
 //# sourceMappingURL=auth.route.js.map

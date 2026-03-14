@@ -1,8 +1,11 @@
-import { ProviderProfileService } from "./providerProfile.service";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProviderProfileController = void 0;
+const providerProfile_service_1 = require("./providerProfile.service");
 const createProviderProfile = async (req, res) => {
     try {
         const user = req.user;
-        const result = await ProviderProfileService.createProviderProfile(user.id, req.body);
+        const result = await providerProfile_service_1.ProviderProfileService.createProviderProfile(user.id, req.body);
         res.status(201).json({
             success: true,
             message: "Provider Profile created successfully",
@@ -19,7 +22,7 @@ const createProviderProfile = async (req, res) => {
 const getAllProviderMeals = async (req, res) => {
     try {
         const userId = req.user.id;
-        const result = await ProviderProfileService.getAllProviderMeals(userId);
+        const result = await providerProfile_service_1.ProviderProfileService.getAllProviderMeals(userId);
         res.status(200).json({
             success: true,
             message: "Provider meals fetched successfully",
@@ -37,7 +40,7 @@ const getSingleProviderMeal = async (req, res) => {
     try {
         const userId = req.user.id;
         const mealId = req.params.id;
-        const result = await ProviderProfileService.getSingleProviderMeal(userId, mealId);
+        const result = await providerProfile_service_1.ProviderProfileService.getSingleProviderMeal(userId, mealId);
         res.status(200).json({
             success: true,
             message: "Meal fetched successfully",
@@ -51,7 +54,7 @@ const getSingleProviderMeal = async (req, res) => {
         });
     }
 };
-export const ProviderProfileController = {
+exports.ProviderProfileController = {
     createProviderProfile,
     getAllProviderMeals,
     getSingleProviderMeal

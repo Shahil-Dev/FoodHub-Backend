@@ -1,12 +1,17 @@
-import express from "express";
-import { postRouter } from "./modules/post.router";
-import router from "./routes";
-const app = express();
-app.use(express.json());
-app.use("/api/v1", router);
-app.use("/posts", postRouter.router);
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const post_router_1 = require("./modules/post.router");
+const routes_1 = __importDefault(require("./routes"));
+const app = (0, express_1.default)();
+app.use(express_1.default.json());
+app.use("/api/v1", routes_1.default);
+app.use("/posts", post_router_1.postRouter.router);
 app.get("/", (req, res) => {
     res.send("Hello, World!");
 });
-export default app;
+exports.default = app;
 //# sourceMappingURL=App.js.map

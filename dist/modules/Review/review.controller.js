@@ -1,8 +1,11 @@
-import { ReviewService } from "./review.service";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ReviewController = void 0;
+const review_service_1 = require("./review.service");
 const createReview = async (req, res) => {
     try {
         const userId = req.user.id;
-        const result = await ReviewService.createReview(userId, req.body);
+        const result = await review_service_1.ReviewService.createReview(userId, req.body);
         res.status(201).json({
             success: true,
             message: "Review submitted successfully",
@@ -16,7 +19,7 @@ const createReview = async (req, res) => {
 const getMealReviews = async (req, res) => {
     try {
         const { mealId } = req.params;
-        const result = await ReviewService.getMealReviews(mealId);
+        const result = await review_service_1.ReviewService.getMealReviews(mealId);
         res.status(200).json({
             success: true,
             message: "Reviews fetched successfully",
@@ -27,5 +30,5 @@ const getMealReviews = async (req, res) => {
         res.status(400).json({ success: false, message: error.message });
     }
 };
-export const ReviewController = { createReview, getMealReviews };
+exports.ReviewController = { createReview, getMealReviews };
 //# sourceMappingURL=review.controller.js.map

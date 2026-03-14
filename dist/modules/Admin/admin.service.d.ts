@@ -2,7 +2,7 @@ export declare const AdminService: {
     getAllUsers: () => Promise<{
         id: string;
         email: string;
-        role: import("@prisma/client").$Enums.Role;
+        role: import(".prisma/client").$Enums.Role;
         name: string;
         status: string;
         createdAt: Date;
@@ -10,7 +10,7 @@ export declare const AdminService: {
     updateUserStatus: (userId: string, status: string) => Promise<{
         id: string;
         email: string;
-        role: import("@prisma/client").$Enums.Role;
+        role: import(".prisma/client").$Enums.Role;
         password: string;
         name: string;
         status: string;

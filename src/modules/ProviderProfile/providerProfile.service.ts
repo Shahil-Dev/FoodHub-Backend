@@ -24,27 +24,17 @@ const createProviderProfile = async (userId: string, payload: any) => {
 
 
 
-const getAllProviderMeals = async (userId: string) => {
-    const providerProfile = await prisma.providerProfile.findUnique({
-        where: { userId }
-    });
-
-    if (!providerProfile) {
-        throw new Error("Provider profile not found!!");
-    }
-
-    const result = await prisma.meal.findMany({
-        where: {
-            providerId: providerProfile.id
-        },
+const getAllProviders = async () => {
+    const result = await prisma.providerProfile.findMany({
         include: {
-            category: true 
-        },
-        orderBy: {
-            createdAt: 'desc' 
+            user: {
+                select: {
+                    name: true,
+                    email: true
+                }
+            }
         }
     });
-
     return result;
 };
 
@@ -78,6 +68,6 @@ const getSingleProviderMeal = async (userId: string, mealId: string) => {
 
 export const ProviderProfileService = {
     createProviderProfile,
-    getAllProviderMeals,
+    getAllProviders,
     getSingleProviderMeal
 };

@@ -12,9 +12,8 @@ router.post(
 );
 
 router.get(
-    '/ProviderProfile',
-    auth(UserRole.PROVIDER),
-    ProviderProfileController.getAllProviderMeals
+    '/all-providers',
+    ProviderProfileController.getAllProviders
 );
 
 router.get(
@@ -24,3 +23,6 @@ router.get(
 );
 
 export const ProviderProfileRoutes = router;
+
+
+

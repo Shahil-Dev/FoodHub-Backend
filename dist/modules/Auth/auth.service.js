@@ -1,9 +1,15 @@
-import bcrypt from "bcryptjs";
-import { prisma } from "../../lib/prisma";
-import jwt from "jsonwebtoken";
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AuthService = void 0;
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const prisma_1 = require("../../lib/prisma");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const createUser = async (payload) => {
-    const hashPassword = await bcrypt.hash(payload.password, 10);
-    const result = await prisma.user.create({
+    const hashPassword = await bcryptjs_1.default.hash(payload.password, 10);
+    const result = await prisma_1.prisma.user.create({
         data: { ...payload, password: hashPassword }
     });
     const userData = {
@@ -12,7 +18,7 @@ const createUser = async (payload) => {
         email: result.email,
         role: result.role
     };
-    const token = jwt.sign(userData, process.env.JWT_SECRET_KEY, { expiresIn: "7d" });
+    const token = jsonwebtoken_1.default.sign(userData, process.env.JWT_SECRET_KEY, { expiresIn: "7d" });
     const { password, ...userWithoutPassword } = result;
     return {
         token,
@@ -20,7 +26,7 @@ const createUser = async (payload) => {
     };
 };
 const loginUser = async (payload) => {
-    const user = await prisma.user.findUnique({
+    const user = await prisma_1.prisma.user.findUnique({
         where: {
             email: payload.email
         }
@@ -28,7 +34,7 @@ const loginUser = async (payload) => {
     if (!user) {
         throw new Error("User not found");
     }
-    const isPasswordMatched = await bcrypt.compare(payload.password, user.password);
+    const isPasswordMatched = await bcryptjs_1.default.compare(payload.password, user.password);
     if (!isPasswordMatched) {
         throw new Error("Incorrect password");
     }
@@ -38,14 +44,14 @@ const loginUser = async (payload) => {
         email: user.email,
         role: user.role
     };
-    const token = jwt.sign(userData, process.env.JWT_SECRET_KEY, { expiresIn: "7d" });
+    const token = jsonwebtoken_1.default.sign(userData, process.env.JWT_SECRET_KEY, { expiresIn: "7d" });
     const { password, ...userWithoutPassword } = user;
     return {
         token,
         user: userWithoutPassword
     };
 };
-export const AuthService = {
+exports.AuthService = {
     createUser,
     loginUser
 };

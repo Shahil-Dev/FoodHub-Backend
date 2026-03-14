@@ -30,7 +30,7 @@ const loginUser = async (req: Request, res: Response) => {
         const result = await AuthService.loginUser(req.body);
 
         res.cookie("token", result.token, {
-            httpOnly: true,
+            httpOnly: false,
             secure: false,
             sameSite: "strict"
         });

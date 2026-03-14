@@ -10,7 +10,7 @@ export declare const ProviderProfileService: {
     getAllProviderMeals: (userId: string) => Promise<({
         category: {
             id: string;
-            name: import("@prisma/client").$Enums.CategoryName;
+            name: import(".prisma/client").$Enums.CategoryName;
         };
     } & {
         id: string;
@@ -27,7 +27,7 @@ export declare const ProviderProfileService: {
     getSingleProviderMeal: (userId: string, mealId: string) => Promise<{
         category: {
             id: string;
-            name: import("@prisma/client").$Enums.CategoryName;
+            name: import(".prisma/client").$Enums.CategoryName;
         };
     } & {
         id: string;
