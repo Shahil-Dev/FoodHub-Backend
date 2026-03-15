@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors({
     origin: [
         "http://localhost:3000",
-        "https://your-new-frontend-link.vercel.app"
+        "https://assignment-4-frontend-b6q4-agc10uz6u-shahil777s-projects.vercel.app"
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
