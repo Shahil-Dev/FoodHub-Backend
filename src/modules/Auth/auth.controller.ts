@@ -7,13 +7,14 @@ const createUser = async (req: Request, res: Response) => {
 
         res.cookie("token", result.token, {
             httpOnly: true,
-            secure: false,
+            secure: false, 
             sameSite: "strict"
         });
 
         res.status(200).json({
             success: true,
             message: "User created successfully",
+            token: result.token,
             data: result.user
         });
 
@@ -30,7 +31,7 @@ const loginUser = async (req: Request, res: Response) => {
         const result = await AuthService.loginUser(req.body);
 
         res.cookie("token", result.token, {
-            httpOnly: false,
+            httpOnly: false, 
             secure: false,
             sameSite: "strict"
         });
@@ -38,6 +39,7 @@ const loginUser = async (req: Request, res: Response) => {
         res.status(200).json({
             success: true,
             message: "User logged in successfully",
+            token: result.token, 
             data: result.user
         });
 
