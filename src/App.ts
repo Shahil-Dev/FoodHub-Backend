@@ -12,7 +12,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://assignment-4-frontend-b6q4-ju38t2u9i-shahil777s-projects.vercel.app",
+      "https://assignment-4-frontend-b6q4.vercel.app/",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
