@@ -18,14 +18,17 @@ const auth = (...roles: UserRole[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
             const authHeader = req.headers.authorization;
+            let token = null;
 
-            if (!authHeader) {
-                throw new Error("Token not found!!");
+            if (authHeader) {
+                token = authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : authHeader;
+            } else if (req.cookies && req.cookies.token) { 
+                token = req.cookies.token; 
             }
 
-            const token = authHeader.startsWith("Bearer ") 
-                ? authHeader.split(" ")[1] 
-                : authHeader;
+            if (!token) {
+                throw new Error("Token not found!!");
+            }
 
             const decoded = jwt.verify(
                 token as string,
@@ -44,7 +47,11 @@ const auth = (...roles: UserRole[]) => {
                 throw new Error("Unauthorized!!! You don't have permission.");
             }
 
-            (req as any).user = decoded;
+            (req as any).user = {
+                id: userData.id,
+                email: decoded.email,
+                role: decoded.role
+            };
 
             next();
         } catch (error: any) {
