@@ -16,14 +16,8 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-
-      "https://assignment-4-frontend-b6q4.vercel.app/",
-    ],
-
+    origin: true,
     credentials: true,
-
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
 
     allowedHeaders: [
@@ -38,7 +32,7 @@ app.use(
   }),
 );
 
-app.options("/", cors());
+app.options("*", cors());
 
 app.use("/api/v1", router);
 
