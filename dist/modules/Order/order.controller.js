@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderController = void 0;
 const order_service_1 = require("./order.service");
+const prisma_1 = require("../../lib/prisma");
 const createOrder = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -9,30 +10,44 @@ const createOrder = async (req, res) => {
         res.status(201).json({
             success: true,
             message: "Order placed successfully",
-            data: result
+            data: result,
         });
     }
     catch (error) {
         res.status(400).json({
             success: false,
-            message: error.message || "Something went wrong"
+            message: error.message || "Something went wrong",
         });
     }
 };
 const getMyOrders = async (req, res) => {
     try {
-        const userId = req.user.id;
-        const result = await order_service_1.OrderService.getMyOrders(userId);
-        res.status(200).json({
+        const customerId = req.user.id;
+        const orders = await prisma_1.prisma.order.findMany({
+            where: {
+                customerId: customerId,
+            },
+            include: {
+                items: {
+                    include: {
+                        meal: true,
+                    },
+                },
+            },
+            orderBy: {
+                createdAt: "desc",
+            },
+        });
+        return res.status(200).json({
             success: true,
-            message: "Orders fetched successfully",
-            data: result
+            message: "Order history fetched successfully",
+            data: orders,
         });
     }
     catch (error) {
-        res.status(400).json({
+        return res.status(500).json({
             success: false,
-            message: error.message || "Something went wrong"
+            message: error.message || "Failed to fetch orders",
         });
     }
 };
@@ -43,13 +58,13 @@ const getProviderOrders = async (req, res) => {
         res.status(200).json({
             success: true,
             message: "Provider orders fetched successfully",
-            data: result
+            data: result,
         });
     }
     catch (error) {
         res.status(400).json({
             success: false,
-            message: error.message || "Something went wrong"
+            message: error.message || "Something went wrong",
         });
     }
 };
@@ -61,13 +76,13 @@ const updateOrderStatus = async (req, res) => {
         res.status(200).json({
             success: true,
             message: "Order status updated successfully",
-            data: result
+            data: result,
         });
     }
     catch (error) {
         res.status(400).json({
             success: false,
-            message: error.message || "Something went wrong"
+            message: error.message || "Something went wrong",
         });
     }
 };
@@ -75,6 +90,6 @@ exports.OrderController = {
     createOrder,
     getMyOrders,
     getProviderOrders,
-    updateOrderStatus
+    updateOrderStatus,
 };
 //# sourceMappingURL=order.controller.js.map

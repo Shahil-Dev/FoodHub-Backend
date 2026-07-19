@@ -42,7 +42,7 @@ const providerProfile_controller_1 = require("./providerProfile.controller");
 const auth_1 = __importStar(require("../../middleware/auth"));
 const router = express_1.default.Router();
 router.post('/ProviderProfile', (0, auth_1.default)(auth_1.UserRole.PROVIDER), providerProfile_controller_1.ProviderProfileController.createProviderProfile);
-router.get('/ProviderProfile', (0, auth_1.default)(auth_1.UserRole.PROVIDER), providerProfile_controller_1.ProviderProfileController.getAllProviderMeals);
+router.get('/all-providers', providerProfile_controller_1.ProviderProfileController.getAllProviders);
 router.get('/ProviderProfile/:id', (0, auth_1.default)(auth_1.UserRole.PROVIDER), providerProfile_controller_1.ProviderProfileController.getSingleProviderMeal);
 exports.ProviderProfileRoutes = router;
 //# sourceMappingURL=providerProfile.route.js.map

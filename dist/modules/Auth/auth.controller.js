@@ -13,6 +13,7 @@ const createUser = async (req, res) => {
         res.status(200).json({
             success: true,
             message: "User created successfully",
+            token: result.token,
             data: result.user
         });
     }
@@ -27,13 +28,14 @@ const loginUser = async (req, res) => {
     try {
         const result = await auth_service_1.AuthService.loginUser(req.body);
         res.cookie("token", result.token, {
-            httpOnly: true,
+            httpOnly: false,
             secure: false,
             sameSite: "strict"
         });
         res.status(200).json({
             success: true,
             message: "User logged in successfully",
+            token: result.token,
             data: result.user
         });
     }

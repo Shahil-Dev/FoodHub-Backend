@@ -16,12 +16,16 @@ const auth = (...roles) => {
     return async (req, res, next) => {
         try {
             const authHeader = req.headers.authorization;
-            if (!authHeader) {
+            let token = null;
+            if (authHeader) {
+                token = authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : authHeader;
+            }
+            else if (req.cookies && req.cookies.token) {
+                token = req.cookies.token;
+            }
+            if (!token) {
                 throw new Error("Token not found!!");
             }
-            const token = authHeader.startsWith("Bearer ")
-                ? authHeader.split(" ")[1]
-                : authHeader;
             const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET_KEY);
             const userData = await prisma_1.prisma.user.findUnique({
                 where: { email: decoded.email },
@@ -32,7 +36,11 @@ const auth = (...roles) => {
             if (roles.length && !roles.includes(decoded.role)) {
                 throw new Error("Unauthorized!!! You don't have permission.");
             }
-            req.user = decoded;
+            req.user = {
+                id: userData.id,
+                email: decoded.email,
+                role: decoded.role
+            };
             next();
         }
         catch (error) {

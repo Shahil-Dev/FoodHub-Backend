@@ -20,22 +20,15 @@ const createProviderProfile = async (userId, payload) => {
     });
     return result;
 };
-const getAllProviderMeals = async (userId) => {
-    const providerProfile = await prisma_1.prisma.providerProfile.findUnique({
-        where: { userId }
-    });
-    if (!providerProfile) {
-        throw new Error("Provider profile not found!!");
-    }
-    const result = await prisma_1.prisma.meal.findMany({
-        where: {
-            providerId: providerProfile.id
-        },
+const getAllProviders = async () => {
+    const result = await prisma_1.prisma.providerProfile.findMany({
         include: {
-            category: true
-        },
-        orderBy: {
-            createdAt: 'desc'
+            user: {
+                select: {
+                    name: true,
+                    email: true
+                }
+            }
         }
     });
     return result;
@@ -63,7 +56,7 @@ const getSingleProviderMeal = async (userId, mealId) => {
 };
 exports.ProviderProfileService = {
     createProviderProfile,
-    getAllProviderMeals,
+    getAllProviders,
     getSingleProviderMeal
 };
 //# sourceMappingURL=providerProfile.service.js.map
